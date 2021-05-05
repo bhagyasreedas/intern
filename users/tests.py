@@ -14,9 +14,7 @@ class UserRegistrationAPIViewTestCase(APITestCase):
     url = reverse("users:list")
 
     def test_invalid_password(self):
-        """
-        Test to verify that a post call with invalid passwords
-        """
+        
         user_data = {
             "username": "testuser",
             "email": "test@testuser.com",
@@ -41,9 +39,8 @@ class UserRegistrationAPIViewTestCase(APITestCase):
         self.assertTrue("token" in json.loads(response.content))
 
     def test_unique_username_validation(self):
-        """
-        Test to verify that a post call with already exists username
-        """
+        
+        
         user_data_1 = {
             "username": "testuser",
             "email": "test@testuser.com",
