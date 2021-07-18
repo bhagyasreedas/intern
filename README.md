@@ -15,6 +15,7 @@ Users
     http://127.0.0.1:8000/users/login/ (User login )
     http://127.0.0.1:8000/users/logout/ (User logout )
     http://127.0.0.1:8000/users/admin/ (username:thebhagya password:1234)
+    http://127.0.0.1:8000/o/applications/ (to create applications)
 
 Requirments:- python(3.8.2) django(3.1.3)
 
