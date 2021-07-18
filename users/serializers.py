@@ -1,5 +1,5 @@
 from django.contrib.auth import authenticate
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.contrib.auth.hashers import make_password
 from django.utils.translation import ugettext_lazy as _
 
@@ -45,7 +45,10 @@ class UserLoginSerializer(serializers.Serializer):
         else:
             raise serializers.ValidationError(self.error_messages['invalid_credentials'])
 
-
+class GroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = ("name", )
 class TokenSerializer(serializers.ModelSerializer):
     auth_token = serializers.CharField(source='key')
 

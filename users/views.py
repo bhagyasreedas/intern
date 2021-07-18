@@ -1,13 +1,18 @@
 from django.shortcuts import render
 
+from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, TokenHasScope
+
+#from permissions import IsAuthenticatedOrCreate
+
 # Create your views here.
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.generics import CreateAPIView, GenericAPIView
 from rest_framework.response import Response
 from rest_framework.generics import RetrieveDestroyAPIView
-from users.serializers import UserRegistrationSerializer, UserLoginSerializer, TokenSerializer
+from users.serializers import UserRegistrationSerializer, UserLoginSerializer, TokenSerializer, Group, GroupSerializer
 
+from rest_framework import generics, permissions, serializers
 
 class UserRegistrationAPIView(CreateAPIView):
     authentication_classes = ()
@@ -47,8 +52,14 @@ class UserLoginAPIView(GenericAPIView):
                 data=serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST,
             )
+        
+        return HttpResponse('hello Bhagyasree!')
 
-
+class GroupList(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated, TokenHasScope]
+    required_scopes = ['groups']
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
 class UserTokenAPIView(RetrieveDestroyAPIView):
     lookup_field = "key"
     serializer_class = TokenSerializer
