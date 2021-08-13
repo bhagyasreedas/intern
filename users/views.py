@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, TokenHasScope
 
-#from permissions import IsAuthenticatedOrCreate
+from .permissions import IsAuthenticatedOrCreate
 
 # Create your views here.
 from rest_framework import status

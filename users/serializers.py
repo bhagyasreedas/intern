@@ -5,15 +5,16 @@ from django.utils.translation import ugettext_lazy as _
 
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
-
+from dateutil.relativedelta import relativedelta
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     confirm_password = serializers.CharField(write_only=True)
+    DOB = serializers.DateField(read_only = True)
 
     class Meta:
         model = User
-        fields = ("id", "username", "email", "password", "confirm_password", )
+        fields = ("id", "username", "email", "DOB", "password", "confirm_password", )
 
     def validate(self, attrs):
         if attrs.get('password') != attrs.get('confirm_password'):
