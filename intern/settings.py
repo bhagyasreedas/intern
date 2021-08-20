@@ -22,6 +22,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'django.contrib.admin',
+    'crispy_forms',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -125,10 +126,7 @@ REST_FRAMEWORK = {
     ),
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 }
-OAUTH2_PROVIDER = {
-    # this is the list of available scopes
-    'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'groups': 'Access to your groups'}
-}
+
 
 
 EXPIRING_TOKEN_DURATION = timedelta(days=90)
@@ -149,7 +147,17 @@ OAUTH2_PROVIDER = {
     "OIDC_ENABLED": True,
     "SCOPES": {
         "openid": "OpenID Connect scope",
+        'read': 'Read scope', 'write': 'Write scope', 'groups': 'Access to your groups',
+          'introspection': 'Introspect token scope',
+          
+        
+
         # ... any other scopes that you use
     },
+      'CLIENT_ID_GENERATOR_CLASS': 'oauth2_provider.generators.ClientIdGenerator',
+       'RESOURCE_SERVER_INTROSPECTION_URL': 'http://127.0.0.1:8000/o/introspect/',
+    #'RESOURCE_SERVER_AUTH_TOKEN': '3yUqsWtwKYKHnfivFcJu', # OR this but not both:
+    # 'RESOURCE_SERVER_INTROSPECTION_CREDENTIALS': ('rs_client_id','rs_client_secret'),
+    'RESOURCE_SERVER_INTROSPECTION_CREDENTIALS':('bGdjiXg0LfhVnEWCAaEiPiw1XGdXVXlMDJbUlk0E','nlyuXEbBqaZYLoa9seBP1FvFRL8xk3MiZNkNqetQvXDajSRszNm1THIRtwy3dfTJuyxQZgsDUFxqdHEcfpZu0V9vQB5zwHFvUfLHxKtbnm43NJCNbm21wIj29MKeZ6UP')
     # ... any other settings you want
 }

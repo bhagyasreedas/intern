@@ -1,9 +1,9 @@
-from django.shortcuts import render
-
+from django.shortcuts import render,redirect 
+from django.http.response import HttpResponse, HttpResponseRedirect
 from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, TokenHasScope
-
+from django.contrib.auth.forms import UserCreationForm,AuthenticationForm
 from .permissions import IsAuthenticatedOrCreate
-
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 from rest_framework import status
 from rest_framework.authtoken.models import Token
@@ -11,7 +11,7 @@ from rest_framework.generics import CreateAPIView, GenericAPIView
 from rest_framework.response import Response
 from rest_framework.generics import RetrieveDestroyAPIView
 from users.serializers import UserRegistrationSerializer, UserLoginSerializer, TokenSerializer, Group, GroupSerializer
-
+from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework import generics, permissions, serializers
 
 class UserRegistrationAPIView(CreateAPIView):
@@ -34,6 +34,8 @@ class UserRegistrationAPIView(CreateAPIView):
 
 
 class UserLoginAPIView(GenericAPIView):
+    #renderer_classes = [TemplateHTMLRenderer]     
+    #template_name = 'users/login.html'
     authentication_classes = ()
     permission_classes = ()
     serializer_class = UserLoginSerializer
@@ -43,17 +45,16 @@ class UserLoginAPIView(GenericAPIView):
         if serializer.is_valid():
             user = serializer.user
             token, _ = Token.objects.get_or_create(user=user)
+            return HttpResponseRedirect('http://localhost:8011/registration/success.php')
             return Response(
                 data=TokenSerializer(token).data,
-                status=status.HTTP_200_OK,
-            )
+                status=status.HTTP_200_OK,)
+           
         else:
             return Response(
                 data=serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        
-        return HttpResponse('hello Bhagyasree!')
 
 class GroupList(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated, TokenHasScope]
@@ -80,3 +81,7 @@ class UserTokenAPIView(RetrieveDestroyAPIView):
             Token.objects.get(key=request.auth.key).delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         return super(UserTokenAPIView, self).destroy(request, key, *args, **kwargs)
+
+@login_required()
+def secret_page(request, *args, **kwargs):
+    return HttpResponse('Secret contents!', status=200)
