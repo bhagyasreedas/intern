@@ -43,8 +43,16 @@ class UserLoginAPIView(GenericAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            user = serializer.user
-            token, _ = Token.objects.get_or_create(user=user)
+
+                
+            user = serializer.instance
+            token, created = Token.objects.get_or_create(user=user)
+            data = serializer.data
+            data["token"] = token.key
+
+            # data = serializer.data
+            # user = serializer.user
+            # token, _ = Token.objects.get_or_create(user=user)
             return HttpResponseRedirect('http://localhost:8011/registration/success.php')
             return Response(
                 data=TokenSerializer(token).data,
